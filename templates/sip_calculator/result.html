@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% load indian_numbers_tags %}
+
+{% block content %}
+    <div style="background-color: #f4f4f4; padding: 20px;">
+        <div style="background-color: #fff; border-radius: 10px; padding: 20px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+            <h2 style="text-align: center; font-family: 'Arial', sans-serif; color: #333;">SIP Investment Result</h2>
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 20px;">
+                <div style="flex: 1; text-align: center;">
+                    <h3 style="font-family: 'Arial', sans-serif; color: #333; margin-bottom: 5px;">Investment Value</h3>
+                    <div style="font-family: 'Arial', sans-serif; font-size: 24px; font-weight: bold; color: #3498DB;">₹ {{ result.1|floatcomma_indian:2 }}</div>
+                </div>
+                <div style="flex: 1; text-align: center;">
+                    <h3 style="font-family: 'Arial', sans-serif; color: #333; font-size: 30px; margin: 0;">+</h3>
+                </div>
+                <div style="flex: 1; text-align: center;">
+                    <h3 style="font-family: 'Arial', sans-serif; color: #333; margin-bottom: 5px;">Returns</h3>
+                    <div style="font-family: 'Arial', sans-serif; font-size: 24px; font-weight: bold; color: #2ECC71;">₹ {{ result.2|floatcomma_indian:2 }}</div>
+                </div>
+                <div style="flex: 1; text-align: center;">
+                    <h3 style="font-family: 'Arial', sans-serif; color: #333; font-size: 30px; margin: 0;">=</h3>
+                </div>
+                <div style="flex: 1; text-align: center;">
+                    <h3 style="font-family: 'Arial', sans-serif; color: #333; margin-bottom: 5px;">Total Value</h3>
+                    <div style="font-size: 24px; font-weight: bold; color: #3498DB;">₹ {{ result.0|floatcomma_indian:2 }}</div>
+                </div>
+                <div style="flex: 1; text-align: right;">
+                    <canvas id="smallPieChart" width="250" height="250" style="border-radius: 35%;"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+          <div style="text-align: center; margin-top: 20px;">
+        <button type="submit" style="background-color: #3498DB; color: #fff; border: none; padding: 10px 20px; border-radius: 5px; font-family: 'Arial', sans-serif; font-size: 16px; cursor: pointer;"  onclick="document.location.href='/sip_calculator/'">Go Back</button>
+      </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var ctx = document.getElementById('smallPieChart').getContext('2d');
+
+            // Replace these values with your actual data
+            var futureTotalInvestment = {{ result.1|stringformat:"i" }};
+            var futureTotalGain = {{ result.2|stringformat:"i" }};
+
+            var data = {
+                labels: ['Investment', 'Gain'],
+                datasets: [{
+                    data: [futureTotalInvestment, futureTotalGain],
+                    backgroundColor: ['#3498DB', '#2ECC71'], // Colors for Investment and Gain
+                }]
+            };
+
+            var smallPieChart = new Chart(ctx, {
+                type: 'pie',
+                data: data,
+            });
+        });
+    </script>
+    <style>
+        /* Add additional CSS styles for the page */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            background-color: #f0f0f0;
+            padding: 0;
+        }
+    </style>
+{% endblock %}
